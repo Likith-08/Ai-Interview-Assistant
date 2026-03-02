@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 style="text-align:center; margin-bottom:30px;">
+    Admin Dashboard
+</h2>
+
+<div style="display:flex; gap:20px; justify-content:center; margin-bottom:40px;">
+
+    <div class="stat-card">
+        <h3>Total Users</h3>
+        <p>{{ total_users }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Total Interviews</h3>
+        <p>{{ total_interviews }}</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Average Score</h3>
+        <p>{{ avg_score }}%</p>
+    </div>
+
+</div>
+
+<h3 style="text-align:center;">Emotion Distribution</h3>
+
+<table class="admin-table">
+    <tr>
+        <th>Emotion</th>
+        <th>Count</th>
+    </tr>
+
+    {% for emotion, count in emotions %}
+    <tr>
+        <td>{{ emotion }}</td>
+        <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3 style="text-align:center; margin-top:40px;">Users</h3>
+
+<table class="admin-table">
+    <tr>
+        <th>Username</th>
+        <th>Role</th>
+    </tr>
+
+    {% for user in users %}
+    <tr>
+        <td>
+            <a href="{{ url_for('admin_user_history', user_id=user[0]) }}" 
+            
+                style="color:#00ffcc; text-decoration:none; font-weight:600;">
+                    {{ user[1] }}
+            </a>
+        </td>
+        <td>{{ user[2] }}</td>
+    </tr>
+{% endfor %}
+</table>
+
+{% endblock %}

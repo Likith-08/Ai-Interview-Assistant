@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="interview-wrapper">
+
+    <!-- ===== HEADER SECTION ===== -->
+    <div class="interview-header">
+        <h2>AI Interview Session</h2>
+
+        <div class="interview-meta">
+            <div class="meta-box">
+                Question <span id="currentQuestion">1</span> / {{ questions|length }}
+            </div>
+
+            <div class="meta-box timer-box">
+                ⏳ <span id="time">60</span>s
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div id="progressFill"></div>
+        </div>
+    </div>
+
+
+    <!-- ===== MAIN GRID ===== -->
+    <div class="interview-grid">
+
+        <!-- LEFT SIDE -->
+        <div class="left-panel">
+
+    <div class="question-card">
+        <p id="questionText">{{ questions[0] }}</p>
+    </div>
+
+    <!-- 🔥 CAMERA SECTION -->
+    <div class="video-box">
+        <video id="video" autoplay playsinline
+            style="width:100%; border-radius:12px;"></video>
+
+        <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <div class="emotion-box">
+                <div class="emotion-pill">
+                    Emotion: {{ emotion }}
+                </div>
+
+                <div class="confidence-pill">
+                    Confidence: {{ confidence }}%
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT SIDE -->
+        <div class="right-panel">
+
+            <div class="record-card">
+
+                <h3>🎤 Your Response</h3>
+
+                <div class="mic-wrapper">
+
+                    <div class="mic-box">
+                        <button id="startBtn" class="mic-btn">
+                            🎤
+                        </button>
+                        <div class="mic-text">Start</div>
+                    </div>
+
+                    <div class="mic-box">
+                        <button id="stopBtn" class="mic-btn stop-btn" disabled>
+                            ⏹
+                        </button>
+                        <div class="mic-text">Stop</div>
+                    </div>
+
+                </div>
+
+                <div id="recordingIndicator" class="recording-indicator" style="display:none;">
+                    🔴 Recording...
+                </div>
+
+                <div class="transcript-box">
+                    <p id="status">Not recorded yet</p>
+                </div>
+
+            </div>
+
+            <button class="next-btn" onclick="nextQuestion()">
+                Next Question →
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    const questionList = JSON.parse('{{ questions | tojson | safe }}');
+</script>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+{% endblock %}

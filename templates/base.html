@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Interview Platform</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<script>
+    function toggleSidebar() {
+        document.querySelector(".sidebar").classList.toggle("collapsed");
+    }
+</script>
+
+    <!-- ===== SIDEBAR ===== -->
+    <div class="sidebar">
+        <div class="sidebar-toggle" onclick="toggleSidebar()">
+                ☰
+        </div> 
+
+        <div class="sidebar-logo">
+            <h2>InterviewAI</h2>
+        </div>
+
+        <nav class="sidebar-nav">
+            {% if session.get('user') %}
+
+                {% if session.get("role") == "admin" %}
+                    <a href="/admin" class="{% if request.path.startswith('/admin') %}active{% endif %}">
+                        <span>Dashboard</span>
+                    </a>
+                {% else %}
+                    <a href="/" class="{% if request.path == '/' %}active{% endif %}">
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="/interview" class="{% if request.path.startswith('/interview') %}active{% endif %}">
+                        <span>Interview</span>
+                    </a>
+
+                    <a href="/result" class="{% if request.path.startswith('/result') %}active{% endif %}">
+                        <span>Results</span>
+                    </a>
+                {% endif %}
+            <a href="/logout" class="logout-link"><span>Logout</span></a>
+
+            {% else %}
+                <a href="/login"><span>Login</span></a>
+                <a href="/register"><span>Register</span></a>
+            {% endif %}
+        </nav>
+
+        {% if session.get('user') %}
+        <div class="sidebar-profile">
+    <div class="profile-avatar">
+        {{ session.get('user')[0] | upper }}
+    </div>
+    <div class="profile-info">
+        <span class="profile-name">{{ session.get('user') }}</span>
+        <span class="profile-status">Active User</span>
+    </div>
+</div>
+        {% endif %}
+
+    </div>
+
+
+    <!-- ===== MAIN CONTENT AREA ===== -->
+    <div class="main">
+
+        <div class="topbar">
+            <div class="topbar-title">
+                AI Interview Analytics Dashboard
+            </div>
+
+            {% if session.get('user') %}
+            <div class="topbar-user">
+                👤 {{ session.get('user') }}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="content-area">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </div>
+
+</script>
+</body>
+</html>

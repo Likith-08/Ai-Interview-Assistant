@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container result-container">
+
+    <h2 class="result-title">Your Interview Result</h2>
+
+    <!-- ================= SCORE SUMMARY ================= -->
+    <div class="result-box">
+
+        <p><strong>Dominant Emotion:</strong> {{ emotion }}</p>
+        <p><strong>Average Confidence:</strong> {{ confidence }}%</p>
+
+        <hr style="margin:25px 0; opacity:0.2;">
+
+        <h3>⭐ Final AI Interview Score</h3>
+
+        <div class="confidence-bar">
+            <div class="confidence-fill" data-width="{{ final_score }}"></div>
+        </div>
+
+        <p style="font-size:28px; margin-top:15px; color:#00f5ff;">
+            {{ final_score }} / 100
+        </p>
+
+        <p style="margin-top:10px;">
+    <strong>Interview Grade:</strong>
+
+    {% if final_score >= 80 %}
+        <span class="grade-badge grade-good">{{ grade }}</span>
+    {% elif final_score >= 60 %}
+        <span class="grade-badge grade-average">{{ grade }}</span>
+    {% else %}
+        <span class="grade-badge grade-poor">{{ grade }}</span>
+    {% endif %}
+
+</p>
+
+    </div>
+
+    <hr style="margin:40px 0; opacity:0.2;">
+
+    <!-- ================= SCORE BREAKDOWN ================= -->
+    <h3>Score Breakdown</h3>
+
+    <div class="card-container">
+
+        <div class="score-card">
+            Confidence Score
+            <span>{{ confidence }}%</span>
+        </div>
+
+        <div class="score-card">
+            Communication Score
+            <span>{{ answer_score }}%</span>
+        </div>
+
+        <div class="emotion-wrapper">
+            <div class="score-card">
+                Emotion Score
+                <span>{{ emotion_score }}%</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= AI FEEDBACK ================= -->
+<div class="feedback-section">
+    <h3 class="feedback-title">🤖 AI Performance Feedback</h3>
+
+    <div class="feedback-box">
+        {{ feedback }}
+    </div>
+</div>
+
+    <hr style="margin:40px 0; opacity:0.2;">
+
+    <!-- ================= EMOTION ANALYTICS ================= -->
+    <h3>Emotion Analytics</h3>
+    <canvas id="emotionChart" style="margin:30px 0;"></canvas>
+
+    <hr style="margin:40px 0; opacity:0.2;">
+
+    <!-- ================= ANSWERS ================= -->
+    <div class="answers-section">
+        <h3>Your Answers</h3>
+
+        {% if answers %}
+            <ul class="answer-list">
+                {% for answer in answers %}
+                    <li>{{ answer }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No answers recorded.</p>
+        {% endif %}
+    </div>
+
+    <div class="button-group">
+    <a href="/">
+        <button>Back to Dashboard</button>
+    </a>
+
+    <a href="/download_report">
+        <button>Download PDF Report</button>
+    </a>
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // ===== Animate Final Score Bar =====
+    const bar = document.querySelector(".confidence-fill");
+    const width = bar.getAttribute("data-width");
+    bar.style.width = width + "%";
+
+    // ===== Emotion Chart =====
+    const emotionData = JSON.parse('{{ emotion_counts | tojson | safe }}');
+    const labels = Object.keys(emotionData);
+    const values = Object.values(emotionData);
+
+    new Chart(document.getElementById("emotionChart"), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Emotion Frequency',
+                data: values,
+                backgroundColor: '#00f5ff'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

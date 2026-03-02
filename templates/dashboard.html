@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard-wrapper">
+
+    <!-- ===== HEADER ===== -->
+    <div class="dashboard-header">
+        <div>
+            <h1>Welcome, {{ session.get('user') }} 👋</h1>
+            <p class="dashboard-subtitle">
+                Track your AI Interview performance insights
+            </p>
+        </div>
+    </div>
+
+    <!-- ===== KPI GRID ===== -->
+    <div class="dashboard-grid">
+
+        <!-- 🔥 Circular Average Score -->
+        <div class="kpi-card score-ring-card">
+            <h3>Average Score</h3>
+
+            <div class="score-ring">
+                <svg>
+                    <circle cx="70" cy="70" r="60"></circle>
+                    <circle cx="70" cy="70" r="60"
+                        style="--percent: {{ avg_score }};"></circle>
+                </svg>
+                <div class="score-number">{{ avg_score }}%</div>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Last Interview</h3>
+            <div class="kpi-value">{{ last_score }}%</div>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Total Interviews</h3>
+            <div class="kpi-value">{{ total_interviews }}</div>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Best Score</h3>
+            <div class="kpi-value">{{ best_score }}%</div>
+        </div>
+
+        <div class="kpi-card">
+            <h3>Worst Score</h3>
+            <div class="kpi-value">{{ worst_score }}%</div>
+        </div>
+
+        <!-- 🔥 Performance Badge -->
+        <div class="kpi-card performance-badge">
+            <h3>Performance Level</h3>
+            <div class="badge-text">{{ performance_level }}</div>
+        </div>
+
+    </div>
+
+    <!-- ===== AI INSIGHT CARD ===== -->
+    <div class="insight-card">
+        <h2>AI Performance Insight</h2>
+        <p>
+            {% if avg_score >= 80 %}
+                Excellent performance! You show strong confidence and emotional stability.
+            {% elif avg_score >= 60 %}
+                Good progress. Keep improving consistency and clarity.
+            {% else %}
+                Needs improvement. Practice communication and confidence.
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- ===== CHART SECTION ===== -->
+    <div class="chart-card">
+        <div class="chart-header">
+            <h2>Performance History</h2>
+        </div>
+        <canvas id="scoreChart"></canvas>
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const scores = JSON.parse('{{ score_history | tojson | safe }}');
+
+    if (scores.length > 0) {
+
+        const labels = scores.map((_, i) => "Interview " + (i + 1));
+
+        new Chart(document.getElementById("scoreChart"), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Score Trend',
+                    data: scores,
+                    borderColor: '#00f5ff',
+                    backgroundColor: 'rgba(0,245,255,0.15)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#00ff88'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: "#fff" }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: "#ccc" }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: { color: "#ccc" }
+                    }
+                }
+            }
+        });
+
+    }
+</script>
+
+{% endblock %}

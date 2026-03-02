@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body {
+    overflow-x: hidden;
+}
+
+/* Background glow */
+.bg-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0,255,200,0.2), transparent 70%);
+    top: -150px;
+    left: -150px;
+    z-index: -1;
+    animation: floatGlow 6s ease-in-out infinite alternate;
+}
+
+@keyframes floatGlow {
+    from { transform: translate(0,0); }
+    to { transform: translate(100px, 80px); }
+}
+
+.category-wrapper {
+    max-width: 1200px;
+    margin: 80px auto;
+    padding: 20px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.title {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    color: #bbb;
+    margin-bottom: 60px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 35px;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 18px;
+    padding: 40px 25px;
+    border: 1px solid rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: all 0.35s ease;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    border-color: #00ffcc;
+    box-shadow: 0 0 35px rgba(0,255,200,0.25);
+}
+
+.card h3 {
+    margin: 15px 0 10px;
+    font-size: 22px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #aaa;
+}
+
+.badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(45deg, #00ffcc, #00c3ff);
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.level {
+    margin-top: 15px;
+    font-size: 12px;
+    color: #00ffcc;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .card {
+    border: 2px solid #00ffcc;
+    box-shadow: 0 0 45px rgba(0,255,200,0.4);
+    transform: translateY(-8px);
+}
+
+.start-btn {
+    margin-top: 70px;
+    padding: 15px 45px;
+    border-radius: 12px;
+    border: none;
+    font-size: 17px;
+    font-weight: 600;
+    background: linear-gradient(45deg, #00ffcc, #00c3ff);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.start-btn.active {
+    opacity: 1;
+    box-shadow: 0 0 30px rgba(0,255,200,0.5);
+}
+
+.start-btn:hover {
+    transform: scale(1.07);
+}
+</style>
+
+<div class="bg-glow"></div>
+
+<div class="category-wrapper">
+
+    <div class="title">Choose Your Interview Track</div>
+    <div class="subtitle">
+        Practice smarter. Select a category and begin your AI-powered interview.
+    </div>
+
+    <form method="POST" action="/interview">
+
+        <div class="grid">
+
+            <label>
+                <input type="radio" name="category" value="python" required>
+                <div class="card">
+                    <div class="badge">Recommended</div>
+                    <div style="font-size:40px;">🐍</div>
+                    <h3>Python</h3>
+                    <p>Core concepts, OOPS, Flask, advanced Python topics</p>
+                    <div class="level">Level: Beginner → Advanced</div>
+                </div>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="dsa">
+                <div class="card">
+                    <div style="font-size:40px;">🧠</div>
+                    <h3>Data Structures & Algorithms</h3>
+                    <p>Complexity, recursion, searching, sorting, trees</p>
+                    <div class="level">Level: Intermediate</div>
+                </div>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="hr">
+                <div class="card">
+                    <div style="font-size:40px;">💼</div>
+                    <h3>HR & Behavioral</h3>
+                    <p>Confidence, communication, personality analysis</p>
+                    <div class="level">Level: All Levels</div>
+                </div>
+            </label>
+
+            <label>
+                <input type="radio" name="category" value="sql">
+                <div class="card">
+                    <div style="font-size:40px;">🗄</div>
+                    <h3>SQL & Databases</h3>
+                    <p>Joins, indexing, normalization, queries</p>
+                    <div class="level">Level: Beginner → Intermediate</div>
+                </div>
+            </label>
+
+        </div>
+
+        <button type="submit" id="startBtn" class="start-btn">
+            Start Interview
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+const radios = document.querySelectorAll('input[name="category"]');
+const button = document.getElementById('startBtn');
+
+radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        button.classList.add('active');
+    });
+});
+</script>
+
+{% endblock %}
